@@ -1,7 +1,7 @@
 <template>
   <section>
       <div class="container">
-          <form @submit.prevent="">
+          <form @submit.prevent="handleSubmit">
               <div class="form-group">
                   <label for="fullName">Full name:</label>
                   <input type="text" id="fullName" v-model="name">
@@ -14,7 +14,7 @@
 
               <div class="form-group">
                   <label for="massage">Massage:</label>
-                  <textarea id="massage" rows="5" v-model="massage"></textarea>
+                  <textarea id="massage" rows="5" v-model="message"></textarea>
               </div>
 
               <button type="submit">Submit</button>
@@ -25,19 +25,32 @@
           <p>Result</p>
           <p>Name: {{ name }}</p>
           <p>Email: {{ email }}</p>
-          <p>Massage: {{ massage }}</p>
+          <p>Massage: {{ message }}</p>
       </div>
   </section>
 </template>
 
 <script>
+import { projectFirestore } from '../firebase/config'
+
 export default {
 data() {
     return {
         name: '',
         email: '',
-        massage: ''
+        message: ''
     }
+},
+methods: {
+  handleSubmit() {
+    let userMessage = {
+      name: this.name,
+      email: this.email,
+      message: this.message
+    }
+
+    projectFirestore.collection('userMessages').add(userMessage)
+  }
 }
 }
 </script>
